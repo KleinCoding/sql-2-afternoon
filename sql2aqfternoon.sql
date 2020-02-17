@@ -220,3 +220,90 @@ WHERE type = 'silver';
 
 DELETE FROM practice_delete
 WHERE value = 150;
+
+
+-- cCommerce problems 
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(60),
+  email VARCHAR(100)
+);
+
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  price INTEGER
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  product_id INTEGER REFERENCES products(id)
+);
+
+INSERT INTO users
+(name, email)
+VALUES
+('Hank', 'beebop@rankhank.net'),
+('Julie', 'iamjules@gmail.com'),
+('Robbie', 'robbie@robbie.org');
+
+INSERT INTO products
+(name, price)
+VALUES
+('Foot Scrubber', 30),
+('Computer', 1000),
+('New Car', 23000);
+
+INSERT INTO orders
+(product_id)
+VALUES
+(1),
+(2),
+(3);
+
+SELECT * FROM orders
+WHERE id = 1;
+
+
+
+SELECT * FROM orders;
+
+SELECT SUM(p.price) FROM products AS p
+INNER JOIN orders AS o
+ON p.id = o.product_id
+WHERE o.id = 1;
+
+ALTER TABLE orders
+ADD user_id INTEGER REFERENCES users(id);
+
+UPDATE orders
+SET user_id = 1
+WHERE id = 1;
+
+
+UPDATE orders
+SET user_id = 3
+WHERE id = 2;
+
+
+UPDATE orders
+SET user_id = 2
+WHERE id = 3;
+
+
+SELECT * FROM orders
+NATURAL JOIN users
+WHERE users.id = 1;
+
+SELECT users.name, count(id) FROM orders
+NATURAL JOIN users
+GROUP BY users.id;
+
+SELECT u.name, SUM(p.price) FROM products AS p
+
+INNER JOIN orders AS o
+ON o.product_id = p.id
+INNER JOIN users AS u
+ON u.id = o.user_id
+GROUP BY u.id;
